@@ -5,19 +5,14 @@ from langchain.tools import tool
 @tool
 def collecting_info(query: str) -> str:
     """
-    Search the PDF knowledge base and retrieve the most relevant
-    information based on the user's question.
+    Search the PDF knowledge base and return relevant information
+    for the user's question
     """
-    docs = vectore_store.similarity_search(
-        query=query,
-        k=2
-    )
+    global last_retrieved_context
 
-    if not docs:
-        return "No relevant information was found in the PDF."
+    docs = vectore_store.similarity_search(query, k=2) 
 
-    retrieved_context = [
-        doc.page_content for doc in docs
-    ]
+    # save the Real retrieved chunks
+    last_retrieved_context = [doc.page_content for doc in docs]
 
-    return "\n\n".join(retrieved_context)
+    return "\n\n".join(last_retrieved_context)
